@@ -1,0 +1,2 @@
+Run any iso or img file on boot with qemu:
+$ qemu-system-x86_64.exe .\invaders.img
