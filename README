@@ -1,2 +1,5 @@
 Run any iso or img file on boot with qemu:
 $ qemu-system-x86_64.exe .\invaders.img
+
+Important pdf
+https://www.cs.bham.ac.uk/~exr/lectures/opsys/10_11/lectures/os-dev.pdf
