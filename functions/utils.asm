@@ -50,3 +50,40 @@ to_ascii:
     add ax, 7
     to_ascii_skip:
     ret
+
+; load DH sectors to ES:BX from drive DL
+; parameters: DL = drive number, DH = number of sectors to read, ES:BX = where to write
+;
+; BIOS regs expectation for int 0x13:
+; dl: drive number, dh: head number (0-x)
+; cl: sector number (1-x), ch: cylinder number (1-x)
+; al: how many sectors to read
+; ES:BX: where to write sectors
+disk_load:
+    pusha
+    push dx         ; push dx onto stack to be used later.
+    mov ah, 0x02    ; bios read sector function
+    mov al, dh      ; Read dh sectors
+    mov ch, 0x00    ; select cylinder 0
+    mov dh, 0x00    ; select head 0
+    mov cl, 0x02    ; read from second sector (sector after boot)
+    int 0x13        ; BIOS interrupt to read
+                    ; Note, this writes to ES:BX
+    
+    jc disk_load_error ; Jump if error (check carry flag)
+
+    pop dx
+    cmp dh, al
+    jne disk_load_error
+    popa
+    ret
+    
+    disk_load_error:
+        mov bx, DISK_LOAD_ERROR_MSG
+        call print_string
+        pop dx
+        popa
+        ret
+    DISK_LOAD_ERROR_MSG:
+        db "Disk read error!",13, 10, 0
+
