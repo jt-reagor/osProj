@@ -41,7 +41,7 @@ print_hex:
         popa
         ret
     HEX_TEMPLATE:               ; template to be edited by print_hex_loop
-        db '0x0000',0
+        db '0x!!!!',13,10,0
 
 to_ascii:
     add ax, 48
